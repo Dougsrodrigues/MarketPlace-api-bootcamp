@@ -2,10 +2,19 @@ const express = require("express");
 
 const routes = express.Router();
 
-const UserController = require("./app/controllers/UserController");
-const SessionController = require("./app/controllers/SessionController");
+const authMiddleware = require("./app/middlewares/auth");
 
-routes.post("/users", UserController.store);
-routes.post("/session", SessionController.store);
+const controllers = require("./app/controllers");
+
+routes.post("/users", controllers.UserController.store);
+routes.post("/session", controllers.SessionController.store);
+
+routes.use(authMiddleware); // todas as rotas daq pra baixo vão ser autenticadas
+
+routes.get("/ads", controllers.AdController.index);
+routes.get("/ads/:id", controllers.AdController.show);
+routes.post("/ads", controllers.AdController.store);
+routes.put("/ads/:id", controllers.AdController.update);
+routes.delete("/ads/:id", controllers.AdController.destroy);
 
 module.exports = routes;
