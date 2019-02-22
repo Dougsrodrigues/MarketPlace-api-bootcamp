@@ -2,7 +2,31 @@ const Ad = require("../models/Ad");
 
 class AdController {
   async index(req, res) {
-    const ads = await Ad.find(); // busca todos os ads
+    const filters = {};
+
+    if (req.query.price_min || req.query.price_max) {
+      filters.price = {};
+
+      if (req.query.price_min) {
+        filters.price.$gte = req.query.price_min; //$gte = maior que
+      }
+
+      if (req.query.price_max) {
+        filters.price.$lte = req.query.price_max; //$lte = menor que
+      }
+    }
+
+    if (req.query.title) {
+      //o titulo n precisa ser igual a palavra que chega na query. 'i' -> tranforma a expressao em case sensitive
+      filters.title = new RegExp(req.query.title, "i");
+    }
+
+    const ads = await Ad.paginate(filters, {
+      limit: 20,
+      populate: ["author"],
+      page: req.query.page || 1,
+      sort: "-createdAt"
+    });
     return res.json(ads);
   }
 

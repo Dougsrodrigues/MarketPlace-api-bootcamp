@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const mongoosePaginate = require("mongoose-paginate"); // paginação
 const Ad = new mongoose.Schema({
   title: {
     type: String,
@@ -23,5 +23,7 @@ const Ad = new mongoose.Schema({
     default: Date.now
   }
 });
+
+Ad.plugin(mongoosePaginate); // Usando paginação
 
 module.exports = mongoose.model("Ad", Ad);
