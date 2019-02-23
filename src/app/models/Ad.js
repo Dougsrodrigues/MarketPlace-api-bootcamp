@@ -18,6 +18,10 @@ const Ad = new mongoose.Schema({
     type: Number,
     required: true
   },
+  // purchaseBy: {
+  //   type: String,
+  //   required: true
+  // },
   createdAt: {
     type: Date,
     default: Date.now

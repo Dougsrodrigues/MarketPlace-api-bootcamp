@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // Gerar Token
 const authConfig = require("../../config/auth");
 const UserSchema = new mongoose.Schema({
   name: {

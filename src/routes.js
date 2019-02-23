@@ -1,6 +1,6 @@
 const express = require("express");
 const validate = require("express-validation");
-const handle = require("express-async-handler");
+const handle = require("express-async-handler"); // Manipula as exceções durando o tempo de reprodução
 const routes = express.Router();
 
 const authMiddleware = require("./app/middlewares/auth");
@@ -41,6 +41,8 @@ routes.post(
   "/purchases",
   validate(validators.Purchase),
   handle(controllers.PurchaseController.store)
-);
+); // Enviar emails
+
+routes.get("/purchases", handle(controllers.PurchaseController.index));
 
 module.exports = routes;

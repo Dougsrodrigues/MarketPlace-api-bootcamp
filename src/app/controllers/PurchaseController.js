@@ -2,6 +2,7 @@ const Ad = require("../models/Ad");
 const User = require("../models/User");
 const Queue = require("../services/Queue");
 const PurchaseMail = require("../jobs/PurchaseMail");
+const Purchase = require("../models/Purchase");
 
 class PurchaseController {
   async store(req, res) {
@@ -9,14 +10,33 @@ class PurchaseController {
 
     const purchaseAd = await Ad.findById(ad).populate("author"); // procura se existe o anuncio
     const user = await User.findById(req.userId); // recuperando os dados do usuario logado
-
+    const userId = user._id;
+    console.log(userId);
+    //Criando a intenção de compra e salvando no mongodb
+    const infPurchase = await Purchase.create({
+      ad,
+      idUser: userId,
+      content
+    });
+    //EMAIL
     Queue.create(PurchaseMail.key, {
       ad: purchaseAd,
       user,
       content
     }).save();
 
-    return res.send();
+    return res.json(infPurchase);
+  }
+
+  async index(req, res) {
+    const purchases = await Purchase.find();
+
+    // const purchases = await Purchase.paginate({
+    //   limit: 20,
+    //   page: req.query.page || 1,
+    //   sort: "-createdAt"
+    // });
+    return res.json(purchases);
   }
 }
 
