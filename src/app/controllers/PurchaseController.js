@@ -10,11 +10,12 @@ class PurchaseController {
 
     const purchaseAd = await Ad.findById(ad).populate("author"); // procura se existe o anuncio
     const user = await User.findById(req.userId); // recuperando os dados do usuario logado
+
     const userId = user._id;
     console.log(userId);
     //Criando a intenção de compra e salvando no mongodb
     const infPurchase = await Purchase.create({
-      ad,
+      adId: ad,
       idUser: userId,
       content
     });
@@ -36,6 +37,17 @@ class PurchaseController {
     //   page: req.query.page || 1,
     //   sort: "-createdAt"
     // });
+    return res.json(purchases);
+  }
+
+  async updateSold(req, res) {
+    const purchases = await Purchase.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true
+      }
+    );
     return res.json(purchases);
   }
 }

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate");
 const PurchaseSchema = new mongoose.Schema({
-  ad: {
+  adId: {
     type: String,
     required: true
   },
@@ -12,6 +12,15 @@ const PurchaseSchema = new mongoose.Schema({
   content: {
     type: String,
     required: false
+  },
+  statusSold: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

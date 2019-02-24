@@ -41,8 +41,10 @@ routes.post(
   "/purchases",
   validate(validators.Purchase),
   handle(controllers.PurchaseController.store)
-); // Enviar emails
+);
 
 routes.get("/purchases", handle(controllers.PurchaseController.index));
+
+routes.put("/purchases/:id", handle(controllers.PurchaseController.updateSold));
 
 module.exports = routes;
