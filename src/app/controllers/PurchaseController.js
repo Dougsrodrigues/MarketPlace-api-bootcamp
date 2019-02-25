@@ -29,13 +29,16 @@ class PurchaseController {
   }
 
   async index(req, res) {
-    const purchases = await Purchase.find();
+    // const purchases = await Purchase.find();
 
-    // const purchases = await Purchase.paginate({
-    //   limit: 20,
-    //   page: req.query.page || 1,
-    //   sort: "-createdAt"
-    // });
+    const purchases = await Purchase.paginate(
+      {},
+      {
+        limit: 20,
+        page: req.query.page || 1,
+        sort: "-createdAt"
+      }
+    );
     return res.json(purchases);
   }
 
