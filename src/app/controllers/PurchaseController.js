@@ -7,12 +7,11 @@ const Purchase = require("../models/Purchase");
 class PurchaseController {
   async store(req, res) {
     const { ad, content } = req.body;
-
     const purchaseAd = await Ad.findById(ad).populate("author"); // procura se existe o anuncio
     const user = await User.findById(req.userId); // recuperando os dados do usuario logado
 
     const userId = user._id;
-    console.log(userId);
+
     //Criando a intenção de compra e salvando no mongodb
     const infPurchase = await Purchase.create({
       adId: ad,
@@ -41,14 +40,23 @@ class PurchaseController {
   }
 
   async updateSold(req, res) {
-    const purchases = await Purchase.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true
-      }
-    );
-    return res.json(purchases);
+    const purch = await Purchase.findById(req.params.id);
+    const user = await User.findById(req.userId);
+    const adIdUser = purch.idUser; // Id do usuario que criou o anuncio
+    const userId = user.id; // id do usuario logado
+
+    if (adIdUser == userId) {
+      const purchases = await Purchase.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true
+        }
+      );
+      return res.json(purchases);
+    } else {
+      return res.status(401).json({ error: "You're not the ad author" });
+    }
   }
 }
 
